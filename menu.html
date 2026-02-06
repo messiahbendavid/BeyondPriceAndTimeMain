@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beyond Price and Time</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #050508;
+            --deep: #0a0a12;
+            --surface: #10101e;
+            --surface-hover: #161628;
+            --border: #1a1a3a;
+            --border-active: #2a2a5e;
+            --muted: #555577;
+            --text: #c8c8e0;
+            --bright: #e8e8ff;
+            --green: #00ff88;
+            --green-dim: #00aa55;
+            --green-bg: rgba(0,255,136,0.08);
+            --cyan: #00ffff;
+            --gold: #ffd700;
+            --red: #ff4444;
+            --magenta: #ff00ff;
+            --nav-height: 56px;
+            --tab-height: 38px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--void);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .shell {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ========== TOP NAV ========== */
+        .top-nav {
+            height: var(--nav-height);
+            min-height: var(--nav-height);
+            background: linear-gradient(180deg, #0c0c18 0%, var(--deep) 100%);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 16px;
+            z-index: 100;
+            position: relative;
+        }
+
+        .top-nav::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--green), var(--cyan), var(--gold), var(--magenta), var(--green));
+            background-size: 400% 100%;
+            animation: nav-accent 12s linear infinite;
+        }
+
+        @keyframes nav-accent {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 400% 0%; }
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            flex-shrink: 0;
+            padding-right: 16px;
+            border-right: 1px solid var(--border);
+            height: 100%;
+        }
+
+        .nav-logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0,255,136,0.3);
+            animation: logo-pulse 4s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        .nav-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes logo-pulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(0,255,136,0.15); }
+            50% { box-shadow: 0 0 18px rgba(0,255,136,0.3); }
+        }
+
+        .nav-logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            color: var(--bright);
+            line-height: 1.2;
+        }
+
+        .nav-logo-text .sub {
+            font-size: 0.45rem;
+            font-weight: 400;
+            letter-spacing: 0.25em;
+            color: var(--muted);
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+            height: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .nav-links::-webkit-scrollbar { display: none; }
+
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            position: relative;
+            border: 1px solid transparent;
+            user-select: none;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: var(--surface-hover);
+            border-color: var(--border);
+        }
+
+        .nav-link.active {
+            color: var(--green);
+            background: var(--green-bg);
+            border-color: rgba(0,255,136,0.2);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20%; right: 20%;
+            height: 2px;
+            background: var(--green);
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(0,255,136,0.4);
+        }
+
+        .nav-link .link-icon { font-size: 14px; line-height: 1; }
+        .nav-link .link-label { line-height: 1; }
+
+        .nav-link .hotkey {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.45rem;
+            color: var(--muted);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 1px 5px;
+            margin-left: 2px;
+            opacity: 0.6;
+        }
+
+        .nav-link.active .hotkey {
+            color: var(--green-dim);
+            border-color: rgba(0,255,136,0.2);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            padding-left: 16px;
+            border-left: 1px solid var(--border);
+            height: 100%;
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--muted);
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 6px rgba(0,255,136,0.5);
+            animation: status-blink 3s ease-in-out infinite;
+        }
+
+        @keyframes status-blink {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .nav-btn {
+            width: 32px; height: 32px;
+            border-radius: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-active);
+            color: var(--text);
+        }
+
+        /* ========== TAB BAR ========== */
+        .tab-bar {
+            height: var(--tab-height);
+            min-height: var(--tab-height);
+            background: var(--deep);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: stretch;
+            padding: 0 12px;
+            gap: 2px;
+            z-index: 99;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tab-bar::-webkit-scrollbar { display: none; }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 16px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid transparent;
+            border-bottom: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+            position: relative;
+            min-width: 140px;
+            max-width: 260px;
+            user-select: none;
+        }
+
+        .tab:hover { background: var(--surface); color: var(--text); }
+
+        .tab.active {
+            background: var(--surface);
+            color: var(--bright);
+            border-color: var(--border);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0; right: 0;
+            height: 2px;
+            background: var(--green);
+        }
+
+        .tab-favicon { font-size: 12px; flex-shrink: 0; }
+        .tab-title { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+
+        .tab-close {
+            width: 18px; height: 18px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--muted);
+            flex-shrink: 0;
+            transition: all 0.15s;
+            opacity: 0;
+        }
+
+        .tab:hover .tab-close { opacity: 1; }
+        .tab-close:hover { background: rgba(255,68,68,0.2); color: var(--red); }
+
+        .url-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+            padding: 0 4px;
+            flex-shrink: 0;
+        }
+
+        .url-display {
+            background: var(--void);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 14px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 280px;
+            transition: border-color 0.2s;
+        }
+
+        .url-display:hover { border-color: var(--border-active); }
+        .url-lock { color: var(--green); font-size: 10px; }
+        .url-text { color: var(--text); }
+        .url-text .url-subdomain { color: var(--green); font-weight: 600; }
+        .url-text .url-domain { color: var(--muted); }
+
+        .url-nav-btn {
+            width: 26px; height: 26px;
+            border-radius: 5px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            transition: all 0.15s;
+        }
+
+        .url-nav-btn:hover { background: var(--surface-hover); color: var(--text); }
+        .url-nav-btn.disabled { opacity: 0.3; pointer-events: none; }
+
+        /* ========== VIEWPORT ========== */
+        .viewport {
+            flex: 1;
+            position: relative;
+            background: var(--void);
+            overflow: hidden;
+        }
+
+        .viewport iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+
+        .viewport iframe.active { display: block; }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--void);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 10;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .loading-overlay.hidden { opacity: 0; }
+
+        .loading-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            color: var(--muted);
+        }
+
+        /* ========== WELCOME ========== */
+        .welcome-screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            z-index: 5;
+            background: var(--void);
+        }
+
+        .welcome-screen.hidden { display: none; }
+
+        .welcome-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            animation: welcome-float 4s ease-in-out infinite;
+            box-shadow:
+                0 0 30px rgba(0,255,136,0.15),
+                0 0 60px rgba(0,255,255,0.08),
+                0 0 90px rgba(255,215,0,0.05);
+            border: 2px solid rgba(0,255,136,0.2);
+        }
+
+        .welcome-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes welcome-float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-14px) scale(1.03); }
+        }
+
+        .welcome-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-align: center;
+            background: linear-gradient(135deg, var(--green), var(--cyan), var(--gold));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 6s ease-in-out infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .welcome-subtitle {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.4em;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .welcome-nav {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 820px;
+            width: 100%;
+            padding: 0 2rem;
+            margin-top: 10px;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, var(--surface), var(--deep));
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .welcome-card:nth-child(1)::before { background: linear-gradient(90deg, var(--gold), var(--green)); }
+        .welcome-card:nth-child(2)::before { background: linear-gradient(90deg, var(--cyan), var(--gold)); }
+        .welcome-card:nth-child(3)::before { background: linear-gradient(90deg, var(--magenta), var(--cyan)); }
+        .welcome-card:nth-child(4)::before { background: linear-gradient(90deg, var(--green), var(--magenta)); }
+
+        .welcome-card:hover {
+            border-color: var(--green);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,255,136,0.1);
+        }
+
+        .welcome-card:hover::before { opacity: 1; }
+
+        .welcome-card-icon { font-size: 1.8rem; margin-bottom: 8px; }
+
+        .welcome-card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            color: var(--bright);
+            margin-bottom: 6px;
+        }
+
+        .welcome-card-desc {
+            font-size: 0.72rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .welcome-card-hotkey {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.5rem;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 2px 6px;
+            margin-top: 10px;
+            display: inline-block;
+            opacity: 0.5;
+        }
+
+        /* ========== MOBILE ========== */
+        .mobile-toggle {
+            display: none;
+            width: 32px; height: 32px;
+            border-radius: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .mobile-dropdown {
+            display: none;
+            position: absolute;
+            top: var(--nav-height);
+            left: 0; right: 0;
+            background: var(--deep);
+            border-bottom: 1px solid var(--border);
+            z-index: 200;
+            padding: 8px;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .mobile-dropdown.open { display: flex; }
+
+        .mobile-dropdown .nav-link {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 0.7rem;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .mobile-toggle { display: flex; }
+            .nav-link .hotkey { display: none; }
+            .url-display { min-width: 180px; }
+            .welcome-nav { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .top-nav { padding: 0 10px; gap: 8px; }
+            .nav-logo-text { display: none; }
+            .url-display { min-width: 120px; font-size: 0.55rem; }
+            .tab { min-width: 100px; padding: 0 10px; }
+            .nav-right { padding-left: 8px; }
+            .welcome-nav { grid-template-columns: 1fr; }
+            .welcome-logo { width: 90px; height: 90px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="shell">
+
+    <!-- ========== TOP NAV ========== -->
+    <nav class="top-nav">
+        <div class="nav-logo" onclick="navigateTo('home')" title="Home">
+            <div class="nav-logo-icon">
+                <img src="logo.png" alt="BPT">
+            </div>
+            <div class="nav-logo-text">
+                BPT
+                <span class="sub">BEYOND PRICE & TIME</span>
+            </div>
+        </div>
+
+        <!-- Desktop nav — ordered: WHY, MANUAL, PROOF, APP -->
+        <div class="nav-links">
+            <div class="nav-link" data-page="why" onclick="navigateTo('why')">
+                <span class="link-icon">💡</span>
+                <span class="link-label">WHY</span>
+                <span class="hotkey">1</span>
+            </div>
+            <div class="nav-link" data-page="manual" onclick="navigateTo('manual')">
+                <span class="link-icon">📖</span>
+                <span class="link-label">MANUAL</span>
+                <span class="hotkey">2</span>
+            </div>
+            <div class="nav-link" data-page="proof" onclick="navigateTo('proof')">
+                <span class="link-icon">🔬</span>
+                <span class="link-label">PROOF</span>
+                <span class="hotkey">3</span>
+            </div>
+            <div class="nav-link" data-page="app" onclick="navigateTo('app')">
+                <span class="link-icon">🎰</span>
+                <span class="link-label">APP</span>
+                <span class="hotkey">4</span>
+            </div>
+        </div>
+
+        <div class="mobile-toggle" onclick="toggleMobileMenu()">☰</div>
+
+        <div class="nav-right">
+            <div class="nav-status">
+                <div class="status-dot"></div>
+                <span id="status-text">LIVE</span>
+            </div>
+            <div class="nav-btn" onclick="toggleFullscreen()" title="Fullscreen">⛶</div>
+        </div>
+
+        <!-- Mobile dropdown — same order -->
+        <div class="mobile-dropdown" id="mobile-menu">
+            <div class="nav-link" data-page="why" onclick="navigateTo('why'); closeMobileMenu();">
+                <span class="link-icon">💡</span>
+                <span class="link-label">WHY</span>
+            </div>
+            <div class="nav-link" data-page="manual" onclick="navigateTo('manual'); closeMobileMenu();">
+                <span class="link-icon">📖</span>
+                <span class="link-label">MANUAL</span>
+            </div>
+            <div class="nav-link" data-page="proof" onclick="navigateTo('proof'); closeMobileMenu();">
+                <span class="link-icon">🔬</span>
+                <span class="link-label">PROOF</span>
+            </div>
+            <div class="nav-link" data-page="app" onclick="navigateTo('app'); closeMobileMenu();">
+                <span class="link-icon">🎰</span>
+                <span class="link-label">APP</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== TAB BAR ========== -->
+    <div class="tab-bar" id="tab-bar">
+        <div class="url-bar">
+            <div class="url-nav-btn disabled" id="btn-back" onclick="goBack()" title="Back">←</div>
+            <div class="url-nav-btn disabled" id="btn-forward" onclick="goForward()" title="Forward">→</div>
+            <div class="url-nav-btn" id="btn-refresh" onclick="refreshCurrent()" title="Refresh">↻</div>
+            <div class="url-display" id="url-display">
+                <span class="url-lock">🔒</span>
+                <span class="url-text" id="url-text">
+                    <span class="url-subdomain">home</span><span class="url-domain">.beyondpriceandtime.com</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEWPORT ========== -->
+    <div class="viewport" id="viewport">
+        <div class="loading-overlay hidden" id="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">LOADING</div>
+        </div>
+
+        <!-- Welcome -->
+        <div class="welcome-screen" id="welcome-screen">
+            <div class="welcome-logo">
+                <img src="logo.png" alt="Beyond Price and Time">
+            </div>
+            <h1 class="welcome-title">BEYOND PRICE AND TIME</h1>
+            <p class="welcome-subtitle">SELECT A DESTINATION</p>
+
+            <!-- Cards — ordered: WHY, MANUAL, PROOF, APP -->
+            <div class="welcome-nav">
+                <div class="welcome-card" onclick="navigateTo('why')">
+                    <div class="welcome-card-icon">💡</div>
+                    <div class="welcome-card-title">WHY IT MATTERS</div>
+                    <div class="welcome-card-desc">The relevance to everything. Price, signal, abundance, cathedrals.</div>
+                    <div class="welcome-card-hotkey">Press 1</div>
+                </div>
+                <div class="welcome-card" onclick="navigateTo('manual')">
+                    <div class="welcome-card-icon">📖</div>
+                    <div class="welcome-card-title">MANUAL</div>
+                    <div class="welcome-card-desc">Complete documentation. How the system works, from first principles.</div>
+                    <div class="welcome-card-hotkey">Press 2</div>
+                </div>
+                <div class="welcome-card" onclick="navigateTo('proof')">
+                    <div class="welcome-card-icon">🔬</div>
+                    <div class="welcome-card-title">PROOF</div>
+                    <div class="welcome-card-desc">Mathematical & empirical evidence. The data behind the law.</div>
+                    <div class="welcome-card-hotkey">Press 3</div>
+                </div>
+                <div class="welcome-card" onclick="navigateTo('app')">
+                    <div class="welcome-card-icon">🎰</div>
+                    <div class="welcome-card-title">STASIS PM | AM</div>
+                    <div class="welcome-card-desc">Live split-screen dashboard. Prediction markets & alpha markets.</div>
+                    <div class="welcome-card-hotkey">Press 4</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ============================================
+// PAGE REGISTRY — ordered: why, manual, proof, app
+// ============================================
+const PAGES = {
+    why: {
+        url: 'https://why.beyondpriceandtime.com',
+        title: 'Why It Matters',
+        icon: '💡',
+        subdomain: 'why',
+    },
+    manual: {
+        url: 'https://manual.beyondpriceandtime.com',
+        title: 'Manual',
+        icon: '📖',
+        subdomain: 'manual',
+    },
+    proof: {
+        url: 'https://proof.beyondpriceandtime.com',
+        title: 'Proof',
+        icon: '🔬',
+        subdomain: 'proof',
+    },
+    app: {
+        url: 'https://app.beyondpriceandtime.com',
+        title: 'STASIS PM | AM',
+        icon: '🎰',
+        subdomain: 'app',
+    },
+};
+
+// Canonical order for tabs
+const PAGE_ORDER = ['why', 'manual', 'proof', 'app'];
+
+// ============================================
+// STATE
+// ============================================
+let openTabs = [];
+let activeTab = null;
+let iframes = {};
+let navHistory = [];
+let navHistoryIndex = -1;
+
+const viewport = document.getElementById('viewport');
+const tabBar = document.getElementById('tab-bar');
+const urlText = document.getElementById('url-text');
+const welcomeScreen = document.getElementById('welcome-screen');
+const loadingOverlay = document.getElementById('loading-overlay');
+
+// ============================================
+// NAVIGATION
+// ============================================
+function navigateTo(key) {
+    if (key === 'home') {
+        setActiveTab(null);
+        return;
+    }
+
+    const page = PAGES[key];
+    if (!page) return;
+
+    if (!openTabs.includes(key)) {
+        openTabs.push(key);
+        // Keep tabs in canonical order
+        openTabs.sort((a, b) => PAGE_ORDER.indexOf(a) - PAGE_ORDER.indexOf(b));
+        createIframe(key, page);
+        renderTabs();
+    }
+
+    setActiveTab(key);
+
+    if (navHistory[navHistoryIndex] !== key) {
+        navHistory = navHistory.slice(0, navHistoryIndex + 1);
+        navHistory.push(key);
+        navHistoryIndex = navHistory.length - 1;
+    }
+
+    updateNavButtons();
+}
+
+function setActiveTab(key) {
+    activeTab = key;
+    welcomeScreen.classList.toggle('hidden', key !== null);
+
+    Object.keys(iframes).forEach(k => {
+        iframes[k].classList.toggle('active', k === key);
+    });
+
+    renderTabs();
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.dataset.page === key);
+    });
+
+    if (key && PAGES[key]) {
+        urlText.innerHTML = `<span class="url-subdomain">${PAGES[key].subdomain}</span><span class="url-domain">.beyondpriceandtime.com</span>`;
+    } else {
+        urlText.innerHTML = `<span class="url-subdomain">home</span><span class="url-domain">.beyondpriceandtime.com</span>`;
+    }
+}
+
+function closeTab(key, event) {
+    if (event) event.stopPropagation();
+    const idx = openTabs.indexOf(key);
+    if (idx === -1) return;
+
+    openTabs.splice(idx, 1);
+
+    if (iframes[key]) {
+        iframes[key].remove();
+        delete iframes[key];
+    }
+
+    if (activeTab === key) {
+        if (openTabs.length > 0) {
+            const newIdx = Math.min(idx, openTabs.length - 1);
+            setActiveTab(openTabs[newIdx]);
+        } else {
+            setActiveTab(null);
+        }
+    }
+
+    renderTabs();
+}
+
+// ============================================
+// IFRAME
+// ============================================
+function createIframe(key, page) {
+    if (iframes[key]) return;
+
+    const iframe = document.createElement('iframe');
+    iframe.src = page.url;
+    iframe.id = `frame-${key}`;
+    iframe.title = page.title;
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
+    iframe.setAttribute('loading', 'lazy');
+
+    showLoading();
+    iframe.addEventListener('load', () => { hideLoading(); });
+
+    viewport.appendChild(iframe);
+    iframes[key] = iframe;
+}
+
+function showLoading() { loadingOverlay.classList.remove('hidden'); }
+function hideLoading() { loadingOverlay.classList.add('hidden'); }
+
+// ============================================
+// TAB RENDERING
+// ============================================
+function renderTabs() {
+    tabBar.querySelectorAll('.tab').forEach(t => t.remove());
+    const urlBar = tabBar.querySelector('.url-bar');
+
+    openTabs.forEach(key => {
+        const page = PAGES[key];
+        if (!page) return;
+
+        const tab = document.createElement('div');
+        tab.className = `tab${key === activeTab ? ' active' : ''}`;
+        tab.onclick = () => navigateTo(key);
+
+        tab.innerHTML = `
+            <span class="tab-favicon">${page.icon}</span>
+            <span class="tab-title">${page.title}</span>
+            <span class="tab-close" onclick="closeTab('${key}', event)">✕</span>
+        `;
+
+        tabBar.insertBefore(tab, urlBar);
+    });
+}
+
+// ============================================
+// HISTORY
+// ============================================
+function goBack() {
+    if (navHistoryIndex > 0) {
+        navHistoryIndex--;
+        const key = navHistory[navHistoryIndex];
+        if (key && openTabs.includes(key)) setActiveTab(key);
+        else setActiveTab(null);
+        updateNavButtons();
+    }
+}
+
+function goForward() {
+    if (navHistoryIndex < navHistory.length - 1) {
+        navHistoryIndex++;
+        const key = navHistory[navHistoryIndex];
+        if (key && openTabs.includes(key)) setActiveTab(key);
+        else navigateTo(key);
+        updateNavButtons();
+    }
+}
+
+function updateNavButtons() {
+    document.getElementById('btn-back').classList.toggle('disabled', navHistoryIndex <= 0);
+    document.getElementById('btn-forward').classList.toggle('disabled', navHistoryIndex >= navHistory.length - 1);
+}
+
+function refreshCurrent() {
+    if (activeTab && iframes[activeTab]) {
+        showLoading();
+        iframes[activeTab].src = iframes[activeTab].src;
+    }
+}
+
+// ============================================
+// MOBILE
+// ============================================
+function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+}
+
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('mobile-menu');
+    const toggle = document.querySelector('.mobile-toggle');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !toggle.contains(e.target)) {
+        closeMobileMenu();
+    }
+});
+
+// ============================================
+// FULLSCREEN
+// ============================================
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+        document.exitFullscreen().catch(() => {});
+    }
+}
+
+// ============================================
+// KEYBOARD SHORTCUTS
+// ============================================
+document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    // 1=why, 2=manual, 3=proof, 4=app
+    if (e.key === '1') { e.preventDefault(); navigateTo('why'); }
+    if (e.key === '2') { e.preventDefault(); navigateTo('manual'); }
+    if (e.key === '3') { e.preventDefault(); navigateTo('proof'); }
+    if (e.key === '4') { e.preventDefault(); navigateTo('app'); }
+
+    if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); goBack(); }
+    if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); goForward(); }
+
+    if ((e.ctrlKey || e.metaKey) && e.key === 'w') {
+        e.preventDefault();
+        if (activeTab) closeTab(activeTab);
+    }
+
+    if (e.key === 'Escape') {
+        closeMobileMenu();
+        setActiveTab(null);
+    }
+
+    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+        e.preventDefault();
+        refreshCurrent();
+    }
+
+    if (e.ctrlKey && e.key === 'Tab') {
+        e.preventDefault();
+        if (openTabs.length > 1) {
+            const idx = openTabs.indexOf(activeTab);
+            const nextIdx = e.shiftKey
+                ? (idx - 1 + openTabs.length) % openTabs.length
+                : (idx + 1) % openTabs.length;
+            navigateTo(openTabs[nextIdx]);
+        }
+    }
+});
+
+// ============================================
+// INIT
+// ============================================
+renderTabs();
+updateNavButtons();
+</script>
+
+</body>
+</html>
